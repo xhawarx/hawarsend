@@ -103,7 +103,7 @@ write_files() {
   umask 077
   cat > "$DIR/.env" <<EOF
 # HawarSend settings. Change a value, then run: install.sh update
-# Every variable: https://github.com/xhawarx/hawarsend/blob/main/docs/user-guide/configuration/environment-variables.md
+# Every variable: https://github.com/xhawarx/hawarsend/blob/hawarsend-v2/docs/user-guide/configuration/environment-variables.md
 HAWARSEND_IMAGE=$IMAGE
 BASE_URL=$base_url
 DOMAIN=$domain
