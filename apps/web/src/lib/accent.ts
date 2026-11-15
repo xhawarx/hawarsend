@@ -26,9 +26,9 @@ export interface Accent {
   dark: AccentShades;
 }
 
-/** SkySend green. Dark mode uses a lighter shade of it unless an operator sets a color. */
-export const DEFAULT_ACCENT_LIGHT = "#2eb68c";
-export const DEFAULT_ACCENT_DARK = "#46c89d";
+/** HawarSend blue, the same base in both color schemes, with white text on it. */
+export const DEFAULT_ACCENT_LIGHT = "#2563eb";
+export const DEFAULT_ACCENT_DARK = "#2563eb";
 
 /** WCAG AA for normal text, with a little room for tinted page backgrounds. */
 export const TEXT_CONTRAST = 4.8;
@@ -101,7 +101,7 @@ function shades(base: Rgb, mode: "light" | "dark"): AccentShades {
 
 /**
  * The accent for both color schemes. With one color (CUSTOM_COLOR) both schemes use it
- * as their base. Without one, SkySend green with its lighter dark-mode shade.
+ * as their base. Without one, HawarSend blue with its lighter dark-mode shade.
  */
 export function deriveAccent(color?: string | null): Accent {
   const light = parseHex(color ?? DEFAULT_ACCENT_LIGHT);

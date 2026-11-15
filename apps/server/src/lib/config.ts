@@ -294,7 +294,7 @@ const configSchema = z.object({
     .transform((v) => parseInt(v, 10))
     .pipe(z.number().int().positive()),
 
-  CUSTOM_TITLE: z.string().default("SkySend"),
+  CUSTOM_TITLE: z.string().default("HawarSend"),
 
   RATE_LIMIT_WINDOW: z
     .string()
@@ -397,11 +397,11 @@ const configSchema = z.object({
             + `(aurora, midnight or graphite). Set DEFAULT_COLOR_SCHEME=${issue.input} instead.`
           : undefined,
     })
-    .default("graphite"),
+    .default("midnight"),
 
   DEFAULT_COLOR_SCHEME: z
     .enum(["dark", "light", "system"])
-    .default("system"),
+    .default("dark"),
 
   // "note" opens the note tab on its block cards. A block type opens it with that block
   // already added, which also keeps the values from before v3 working.
@@ -529,6 +529,22 @@ const configSchema = z.object({
     .default("86400")
     .transform((v) => parseInt(v, 10))
     .pipe(z.number().int().positive()),
+
+  /**
+   * Password of the web admin panel at /admin. The panel and its API stay off while unset.
+   * The panel never sees a key, a filename or note content, only what the server stores anyway.
+   */
+  ADMIN_PASSWORD: z
+    .string()
+    .min(12, "ADMIN_PASSWORD must be at least 12 characters long")
+    .optional(),
+
+  /** How long an admin session lasts, in seconds. Default: 28800 (8 hours). */
+  ADMIN_SESSION_DURATION: z
+    .string()
+    .default("28800")
+    .transform((v) => parseInt(v, 10))
+    .pipe(z.number().int().positive().max(604800)),
 });
 
 type RawConfig = z.infer<typeof configSchema>;

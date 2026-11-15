@@ -29,6 +29,7 @@ const languages = [
   { code: "ja", name: "日本語", flag: "jp" },
   { code: "ru", name: "Русский", flag: "ru" },
   { code: "uk", name: "Українська", flag: "ua" },
+  { code: "tr", name: "Türkçe", flag: "tr" },
 ] as const;
 
 function detectBrowserLanguage(): string {

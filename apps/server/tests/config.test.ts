@@ -37,7 +37,7 @@ describe("config", () => {
       expect(config.FILE_DOWNLOAD_OPTIONS).toEqual([1, 2, 3, 4, 5, 10, 20, 50, 100]);
       expect(config.FILE_DEFAULT_DOWNLOAD).toBe(1);
       expect(config.CLEANUP_INTERVAL).toBe(60);
-      expect(config.CUSTOM_TITLE).toBe("SkySend");
+      expect(config.CUSTOM_TITLE).toBe("HawarSend");
       expect(config.RATE_LIMIT_WINDOW).toBe(60000);
       expect(config.RATE_LIMIT_MAX).toBe(60);
       expect(config.FILE_UPLOAD_QUOTA_BYTES).toBe(0);
@@ -390,10 +390,10 @@ describe("config", () => {
   });
 
   describe("DEFAULT_THEME and DEFAULT_COLOR_SCHEME", () => {
-    it("should default to the graphite theme and the system color scheme", async () => {
+    it("should default to the midnight theme and the dark color scheme", async () => {
       const config = await loadFreshConfig();
-      expect(config.DEFAULT_THEME).toBe("graphite");
-      expect(config.DEFAULT_COLOR_SCHEME).toBe("system");
+      expect(config.DEFAULT_THEME).toBe("midnight");
+      expect(config.DEFAULT_COLOR_SCHEME).toBe("dark");
     });
 
     it("should accept the other themes and color schemes", async () => {

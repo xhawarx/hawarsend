@@ -16,6 +16,7 @@ import zh from "./zh.json";
 import ja from "./ja.json";
 import ru from "./ru.json";
 import uk from "./uk.json";
+import tr from "./tr.json";
 
 const STORAGE_KEY = "skysend-lang";
 
@@ -58,6 +59,7 @@ i18n
       ja: { translation: ja },
       ru: { translation: ru },
       uk: { translation: uk },
+      tr: { translation: tr },
     },
     fallbackLng: "en",
     interpolation: {

@@ -39,18 +39,18 @@ export default defineConfig(({ command }) => {
   // so replace the placeholder directly with the env value.
   const env = command === "serve" ? readDevEnv() : {};
   const customTitle = command === "serve"
-    ? (env.CUSTOM_TITLE ?? "SkySend")
+    ? (env.CUSTOM_TITLE ?? "HawarSend")
     : "__CUSTOM_TITLE__";
   // Link previews never reach the dev server, so the built-in defaults are enough there.
   const ogImage = command === "serve" ? "/logo.png" : "__OG_IMAGE__";
   const twitterCard = command === "serve" ? "summary" : "__TWITTER_CARD__";
   const envTheme = env.DEFAULT_THEME ?? "";
   const defaultTheme = command === "serve"
-    ? (["aurora", "midnight", "graphite"].includes(envTheme) ? envTheme : "graphite")
+    ? (["aurora", "midnight", "graphite"].includes(envTheme) ? envTheme : "midnight")
     : "__DEFAULT_THEME__";
   const envColorScheme = env.DEFAULT_COLOR_SCHEME ?? "";
   const defaultColorScheme = command === "serve"
-    ? (["dark", "light", "system"].includes(envColorScheme) ? envColorScheme : "system")
+    ? (["dark", "light", "system"].includes(envColorScheme) ? envColorScheme : "dark")
     : "__DEFAULT_COLOR_SCHEME__";
   // The API server takes its port from PORT in .env.dev, SERVER_PORT in the shell still wins.
   const apiTarget = `http://localhost:${env.SERVER_PORT ?? env.PORT ?? 3000}`;

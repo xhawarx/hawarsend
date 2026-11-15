@@ -47,12 +47,12 @@
   --color-input: rgba(15, 17, 30, 0.16);
 
   /* The accent. Same values as deriveAccent() for SkySend green. */
-  --color-primary: #2eb68c;
-  --color-primary-foreground: #000000;
-  --color-primary-text: #207f62;
-  --color-primary-soft: rgba(46, 182, 140, 0.12);
-  --color-primary-line: rgba(46, 182, 140, 0.42);
-  --color-primary-glow: rgba(46, 182, 140, 0.28);
+  --color-primary: #2563eb;
+  --color-primary-foreground: #ffffff;
+  --color-primary-text: #2563eb;
+  --color-primary-soft: rgba(37, 99, 235, 0.12);
+  --color-primary-line: rgba(37, 99, 235, 0.42);
+  --color-primary-glow: rgba(37, 99, 235, 0.28);
   /* The main button. In light it takes the darker text shade of the accent with white
      text, which reads calmer than the bare accent. The text shade keeps 4.8:1 on white. */
   --color-action: var(--color-primary-text);
@@ -113,12 +113,12 @@
   --color-border: rgba(255, 255, 255, 0.1);
   --color-input: rgba(255, 255, 255, 0.16);
 
-  --color-primary: #46c89d;
-  --color-primary-foreground: #000000;
-  --color-primary-text: #46c89d;
-  --color-primary-soft: rgba(70, 200, 157, 0.16);
-  --color-primary-line: rgba(70, 200, 157, 0.5);
-  --color-primary-glow: rgba(70, 200, 157, 0.22);
+  --color-primary: #2563eb;
+  --color-primary-foreground: #ffffff;
+  --color-primary-text: #5c8af0;
+  --color-primary-soft: rgba(37, 99, 235, 0.16);
+  --color-primary-line: rgba(37, 99, 235, 0.5);
+  --color-primary-glow: rgba(37, 99, 235, 0.22);
   --color-action: var(--color-primary);
   --color-action-foreground: var(--color-primary-foreground);
   --color-ring: #46c89d;

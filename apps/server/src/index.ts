@@ -38,6 +38,7 @@ import { createNoteRoute } from "./routes/note.js";
 import { createAuthRoute } from "./routes/auth.js";
 import { createRequestRoute } from "./routes/request.js";
 import { createInboxRoute } from "./routes/inbox.js";
+import { createAdminRoute } from "./routes/admin.js";
 
 // OIDC
 import { createOidcAdapter } from "./auth/index.js";
@@ -337,6 +338,12 @@ if (config.OIDC_ENABLED && config.OIDC_PROTECT_NOTES && oidcAdapter) {
 }
 
 api.route("/note", noteRoute);
+
+// The web admin panel API. Off unless ADMIN_PASSWORD is set. It shares the password lockout,
+// under a key of its own, so guessing the admin password is limited like any other password.
+if (config.ADMIN_PASSWORD) {
+  api.route("/admin", createAdminRoute({ storage, lockout: passwordLockout }));
+}
 
 // An unknown path under /api gets a JSON 404 instead of the page of the SPA fallback below with
 // 200, which a client would take for an answer. It has to stay the last route of the group.

@@ -15,6 +15,7 @@ import { InboxPage } from "@/pages/Inbox";
 import { RequestUploadPage } from "@/pages/RequestUpload";
 import { TemplatesLinkPage } from "@/pages/TemplatesLink";
 import { SettingsPage } from "@/pages/Settings";
+import { AdminPage } from "@/pages/Admin";
 import { NotFoundPage } from "@/pages/NotFound";
 
 /**
@@ -53,6 +54,7 @@ export function App() {
                 <Route path="/templates" element={<TemplatesLinkPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/how" element={<HowItWorksPage />} />
+                <Route path="/admin" element={<AdminPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>
             </Routes>
