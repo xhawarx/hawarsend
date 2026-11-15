@@ -1,14 +1,21 @@
+# HawarSend, built from this repository's Dockerfile.
+# Coolify fills SERVICE_URL_SKYSEND with the public URL of the service and ADMIN_PASSWORD from
+# its environment variables. The service keeps the name "skysend" so the domain stays mapped.
 services:
   skysend:
-    image: skyfay/skysend:latest
-    container_name: skysend
+    build:
+      context: .
+      dockerfile: Dockerfile
     restart: always
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     volumes:
       - ./data:/data
       - ./uploads:/uploads
     environment:
-      - BASE_URL=http://localhost:3000
-      # All environment variables: https://docs.skysend.app/user-guide/configuration/environment-variables
-      # There are a lot of customization options available, so make sure to check the documentation for more details.
+      - BASE_URL=${SERVICE_URL_SKYSEND:-http://localhost:3000}
+      - TRUST_PROXY=true
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-}
+      - CUSTOM_LINK_URL=https://github.com/xhawarx/hawarsend
+      - CUSTOM_LINK_NAME=HawarSend
+      # All environment variables: docs/user-guide/configuration/environment-variables.md

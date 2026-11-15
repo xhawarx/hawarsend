@@ -269,7 +269,7 @@ export function Layout() {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             <a
-              href="https://github.com/skyfay/skysend"
+              href="https://github.com/xhawarx/hawarsend"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
