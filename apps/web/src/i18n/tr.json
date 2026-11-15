@@ -853,6 +853,11 @@
     "previous": "Önceki sayfa",
     "next": "Sonraki sayfa",
     "settingsTitle": "Sunucu ayarları",
-    "settingsText": "Salt okunur. Değiştirmek için sunucunun ortam değişkenlerini düzenleyip yeniden başlat."
+    "settingsText": "Salt okunur. Değiştirmek için sunucunun ortam değişkenlerini düzenleyip yeniden başlat.",
+    "search": "Kimliğe göre ara",
+    "filter": "Filtre",
+    "filterAll": "Tümü",
+    "refresh": "Yenile",
+    "noMatch": "Aramaya veya filtreye uyan bir şey yok."
   }
 }

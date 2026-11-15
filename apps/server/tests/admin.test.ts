@@ -10,7 +10,7 @@ vi.mock("../src/lib/config.js", () => ({ getConfig: vi.fn() }));
 
 import { getDb } from "../src/db/index.js";
 import { getConfig } from "../src/lib/config.js";
-import { createAdminRoute, ADMIN_COOKIE } from "../src/routes/admin.js";
+import { createAdminRoute, ADMIN_COOKIE, resetAdminState } from "../src/routes/admin.js";
 import { createPasswordLockout } from "../src/lib/password-lockout.js";
 
 const PASSWORD = "correct horse battery staple";
@@ -34,6 +34,7 @@ describe("admin route", () => {
     storageCtx = await createTestStorage();
     vi.mocked(getDb).mockReturnValue(dbCtx.db);
     vi.mocked(getConfig).mockReturnValue(CONFIG);
+    resetAdminState();
     app = new Hono();
     app.route(
       "/api/admin",
@@ -145,5 +146,59 @@ describe("admin route", () => {
     const res = await app.request("/api/admin/settings", { headers: { Cookie: cookie } });
     expect(res.status).toBe(200);
     expect(await res.text()).not.toContain(PASSWORD);
+  });
+  it("ends the session on the server at logout, even for a copied cookie", async () => {
+    const cookie = await sessionCookie();
+    const logout = await app.request("/api/admin/logout", {
+      method: "POST",
+      headers: { Cookie: cookie, "Content-Type": "application/json" },
+      body: "{}",
+    });
+    expect(logout.status).toBe(200);
+    const after = await app.request("/api/admin/stats", { headers: { Cookie: cookie } });
+    expect(after.status).toBe(401);
+  });
+
+  it("refuses an oversized login body", async () => {
+    const res = await app.request("/api/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: "x".repeat(64 * 1024) }),
+    });
+    expect(res.status).toBe(413);
+  });
+
+  it("stops every login after too many failures from many addresses", async () => {
+    const wide = new Hono();
+    // A lockout that never triggers per client, so only the global ceiling is left.
+    wide.route(
+      "/api/admin",
+      createAdminRoute({ storage: storageCtx.storage, lockout: createPasswordLockout(10_000, 60_000) }),
+    );
+    for (let i = 0; i < 30; i++) {
+      const res = await wide.request("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: `guess-${i}-guess` }),
+      });
+      expect(res.status).toBe(401);
+    }
+    const right = await wide.request("/api/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: PASSWORD }),
+    });
+    expect(right.status).toBe(429);
+  });
+
+  it("hides the admin API from addresses outside ADMIN_ALLOWED_IPS", async () => {
+    vi.mocked(getConfig).mockReturnValue({ ...CONFIG, ADMIN_ALLOWED_IPS: ["203.0.113.0/24"] } as Config);
+    const limited = new Hono();
+    limited.route(
+      "/api/admin",
+      createAdminRoute({ storage: storageCtx.storage, lockout: createPasswordLockout(3, 60_000) }),
+    );
+    const res = await limited.request("/api/admin/session");
+    expect(res.status).toBe(404);
   });
 });

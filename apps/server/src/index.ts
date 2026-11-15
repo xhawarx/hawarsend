@@ -143,6 +143,19 @@ app.use(
     strictTransportSecurity: "max-age=63072000; includeSubDomains; preload",
     xFrameOptions: "DENY",
     referrerPolicy: "no-referrer",
+    // The app needs none of these, so a script that got into the page cannot ask for them.
+    permissionsPolicy: {
+      camera: [],
+      microphone: [],
+      geolocation: [],
+      payment: [],
+      usb: [],
+      serial: [],
+      bluetooth: [],
+      hid: [],
+      displayCapture: [],
+      browsingTopics: [],
+    },
   }),
 );
 // Allow any origin on the public health endpoint (read-only, no sensitive data)

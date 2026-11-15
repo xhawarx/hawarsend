@@ -11,6 +11,8 @@ import {
   KeyRound,
   Lock,
   LogOut,
+  RefreshCw,
+  Search,
   Settings2,
   ShieldCheck,
   StickyNote,
@@ -33,6 +35,7 @@ import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ApiError } from "@/lib/api";
 import {
   adminLogin,
@@ -354,6 +357,9 @@ function ItemList({
   const [loadedAt, setLoadedAt] = useState(0);
   const [pending, setPending] = useState<AdminItem | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [query, setQuery] = useState("");
+  const [status, setStatus] = useState<"all" | "active" | "expired">("all");
+  const [refreshing, setRefreshing] = useState(false);
 
   const load = useCallback(() => {
     fetchAdminItems(kind, page)
@@ -362,10 +368,17 @@ function ItemList({
         setPageSize(res.pageSize);
         setLoadedAt(Date.now());
       })
-      .catch(onError);
+      .catch(onError)
+      .finally(() => setRefreshing(false));
   }, [kind, page, onError]);
 
   useEffect(load, [load]);
+
+  const refresh = () => {
+    setRefreshing(true);
+    load();
+    onChanged();
+  };
 
   const date = (ms: number) =>
     new Date(ms).toLocaleString(i18n.language, { dateStyle: "short", timeStyle: "short" });
@@ -388,16 +401,58 @@ function ItemList({
 
   if (!items) return <Skeleton className="h-64 w-full rounded-[20px]" />;
 
+  const isExpired = (item: AdminItem) => item.expiresAt < loadedAt || item.closed === true;
+  const needle = query.trim().toLowerCase();
+  const shown = items.filter(
+    (item) =>
+      (!needle || item.id.includes(needle)) &&
+      (status === "all" || (status === "expired") === isExpired(item)),
+  );
+
   return (
     <Card>
       <CardContent className="space-y-4 pt-6">
-        {items.length === 0 ? (
-          <p className="py-10 text-center text-sm text-muted-foreground">{t("admin.empty")}</p>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="relative flex-1">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={t("admin.search")}
+              aria-label={t("admin.search")}
+              className="pl-9"
+            />
+          </div>
+          <ToggleGroup
+            type="single"
+            variant="segmented"
+            value={status}
+            onValueChange={(v) => v && setStatus(v as typeof status)}
+            aria-label={t("admin.filter")}
+          >
+            <ToggleGroupItem value="all">{t("admin.filterAll")}</ToggleGroupItem>
+            <ToggleGroupItem value="active">{t("admin.active")}</ToggleGroupItem>
+            <ToggleGroupItem value="expired">{t("admin.expired")}</ToggleGroupItem>
+          </ToggleGroup>
+          <Button
+            variant="outline"
+            size="icon"
+            aria-label={t("admin.refresh")}
+            onClick={refresh}
+            disabled={refreshing}
+          >
+            <RefreshCw className={refreshing ? "animate-spin" : undefined} />
+          </Button>
+        </div>
+        {shown.length === 0 ? (
+          <p className="py-10 text-center text-sm text-muted-foreground">
+            {items.length === 0 ? t("admin.empty") : t("admin.noMatch")}
+          </p>
         ) : (
           <ScrollArea viewportClassName="max-h-[60vh]">
             <ul className="divide-y divide-border">
-              {items.map((item) => {
-                const expired = item.expiresAt < loadedAt || item.closed;
+              {shown.map((item) => {
+                const expired = isExpired(item);
                 return (
                   <li
                     key={item.id}

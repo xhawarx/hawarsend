@@ -9,3 +9,16 @@
 ### 🎨 Improvements
 
 - **web**: The Midnight theme has navy tinted dark surfaces and a new HawarSend logo.
+
+### 🔒 Security
+
+- **server**: The admin login refuses bodies over 16 KB and stops all logins after 30 failures in an hour from any address.
+- **server**: An admin logout now ends the session on the server, and admin sessions last two hours by default.
+- **server**: ADMIN_ALLOWED_IPS limits the admin API to listed addresses or networks.
+- **server**: Responses carry a Permissions-Policy that turns off camera, microphone, location and similar browser features.
+- **docker**: Nested env files stay out of the Docker build context.
+
+### 🔧 CI/CD
+
+- **infra**: A publish workflow builds the image for amd64 and arm64 and pushes it to the GitHub Container Registry.
+- **infra**: A one-command installer sets up Docker, HTTPS through Caddy, an admin password and HawarSend.

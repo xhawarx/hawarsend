@@ -539,10 +539,27 @@ const configSchema = z.object({
     .min(12, "ADMIN_PASSWORD must be at least 12 characters long")
     .optional(),
 
-  /** How long an admin session lasts, in seconds. Default: 28800 (8 hours). */
+  /**
+   * Addresses or networks that may reach the admin API, comma separated ("203.0.113.7,
+   * 2001:db8::/48"). Every other client gets a 404, as if the panel were off. Unset: everyone.
+   */
+  ADMIN_ALLOWED_IPS: z
+    .string()
+    .optional()
+    .transform((v) => (v ? v.split(",").map((s) => s.trim()).filter(Boolean) : undefined))
+    .superRefine((list, ctx) => {
+      if (!list) return;
+      try {
+        trustedProxyList(list);
+      } catch (err) {
+        ctx.addIssue({ code: "custom", message: err instanceof Error ? err.message : String(err) });
+      }
+    }),
+
+  /** How long an admin session lasts, in seconds. Default: 7200 (2 hours). */
   ADMIN_SESSION_DURATION: z
     .string()
-    .default("28800")
+    .default("7200")
     .transform((v) => parseInt(v, 10))
     .pipe(z.number().int().positive().max(604800)),
 });

@@ -848,6 +848,11 @@
     "previous": "Previous page",
     "next": "Next page",
     "settingsTitle": "Server settings",
-    "settingsText": "Read-only. Change them through the environment variables of the server and restart it."
+    "settingsText": "Read-only. Change them through the environment variables of the server and restart it.",
+    "search": "Search by ID",
+    "filter": "Filter",
+    "filterAll": "All",
+    "refresh": "Refresh",
+    "noMatch": "Nothing matches the search or the filter."
   }
 }

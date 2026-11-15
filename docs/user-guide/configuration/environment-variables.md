@@ -255,6 +255,16 @@ When `OIDC_ISSUER`, `OIDC_CLIENT_ID`, and `OIDC_CLIENT_SECRET` are all set, OIDC
 
 > ⚠️ The three variables marked ⚠️ (`OIDC_ISSUER`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`) must all be set together. Setting any one of them without the others will cause SkySend to refuse to start.
 
+## Admin Panel
+
+| Variable | Required | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `ADMIN_PASSWORD` | ❌ | - | Password of the web admin panel at `/admin`, at least 12 characters. While it is unset, the panel and its API at `/api/admin` are off. |
+| `ADMIN_SESSION_DURATION` | ❌ | `7200` | Lifetime of an admin session in seconds, at most 604800 (7 days). A logout ends the session on the server, and a restart ends all of them. |
+| `ADMIN_ALLOWED_IPS` | ❌ | - | Comma-separated addresses or networks (`203.0.113.7,10.0.0.0/8`) that may reach the admin API. Every other client gets a 404. Behind a reverse proxy it needs `TRUST_PROXY=true`. |
+
+The admin panel shows only what the server stores anyway: IDs, sizes, counters and times. It never sees a key, a filename or note content. Failed logins are limited per client by the password lockout, and to 30 per hour for all clients together.
+
 ## Docker
 
 | Variable | Required | Default | Description |

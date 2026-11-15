@@ -21,4 +21,8 @@ changelog
 *.log
 coverage
 .turbo
-.test
+.test**/.env
+**/.env.*
+!**/.env.example
+!**/.env.dev.example
+install.sh

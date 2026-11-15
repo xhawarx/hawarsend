@@ -1,168 +1,159 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/Skyfay/SkySend/main/docs/public/logo.svg" alt="SkySend Logo" width="120">
+
+<img src="apps/web/public/logo.svg" width="96" height="96" alt="HawarSend" />
+
+# HawarSend
+
+**Uçtan uca şifreli, kendi sunucunda çalışan dosya ve not paylaşımı.**
+**End-to-end encrypted, self-hosted file and note sharing.**
+
+[Canlı demo](https://send.hawar.dev) · [Kurulum](#-tek-komutla-kurulum) · [Admin paneli](#-admin-paneli) · [Güvenlik](#-güvenlik) · [English](#-english)
+
 </div>
 
-<h1 align="center">SkySend</h1>
+---
 
-<p align="center">
-  <strong>End-to-end encrypted, self-hostable file and note sharing, built for speed and security.</strong>
-</p>
+Dosyalar ve notlar tarayıcıdan çıkmadan önce şifrelenir. Anahtar linkin `#` işaretinden sonraki
+kısmında durur ve tarayıcılar o kısmı sunucuya hiç göndermez. Sunucu yalnızca şifreli veriyi
+saklar: dosya adını, içeriği ya da anahtarı göremez.
 
-<p align="center">
-  <a href="https://github.com/Skyfay/SkySend/actions/workflows/release.yml"><img src="https://github.com/Skyfay/SkySend/actions/workflows/release.yml/badge.svg" alt="Release"></a>
-  <a href="https://hub.docker.com/r/skyfay/skysend"><img src="https://img.shields.io/docker/pulls/skyfay/skysend?logo=docker&logoColor=white" alt="Docker Pulls"></a>
-  <a href="https://codecov.io/gh/Skyfay/SkySend"><img src="https://img.shields.io/codecov/c/github/Skyfay/SkySend?label=coverage" alt="Coverage"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-blue.svg" alt="License"></a>
-  <a href="https://discord.com/invite/YvgPyky"><img src="https://img.shields.io/discord/580801656707350529?label=Discord&color=%235865f2" alt="Discord"></a>
-</p>
+## ✨ Özellikler
 
-<p align="center">
-  <a href="https://skysend.app">Website</a> •
-  <a href="https://docs.skysend.app">Documentation</a> •
-  <a href="https://docs.skysend.app/user-guide/getting-started">Quick Start</a> •
-  <a href="https://docs.skysend.app/instances">Public Instances</a> •
-  <a href="https://docs.skysend.app/changelog">Changelog</a> •
-  <a href="https://skysend.app/roadmap/">Roadmap</a>
-</p>
+- **Dosya paylaşımı:** Çoklu dosya ve klasör, büyük dosyalar için parça parça ve WebSocket ile yükleme.
+- **Notlar:** Metin, parola, kod ve SSH anahtarı blokları. Okunduktan sonra kendini silen notlar.
+- **Dosya istekleri:** Birine yükleme linki ver, gönderdikleri yalnızca senin için şifrelensin.
+- **Kendini silen paylaşımlar:** Süre ve indirme sınırı, hangisi önce dolarsa.
+- **Parola koruması:** İsteğe bağlı, Argon2id ile türetilir.
+- **Admin paneli:** İstatistikler, paylaşım listeleri, silme, temizlik, sunucu ayarları.
+- **Siyah ve mavi tema**, açık ve koyu mod, Türkçe dahil 16 dil.
+- **Depolama:** Yerel disk ya da S3 uyumlu her şey (AWS S3, Cloudflare R2, MinIO).
+- **İsteğe bağlı OIDC girişi:** Kimlerin paylaşım yapabileceğini sen belirlersin.
+- **Tek container, SQLite.** Ek veritabanı ya da Redis gerekmez.
 
-<!-- Premium Sponsors ($500 a month): their logo at the very top, linking to their site. Kept by hand,
-     uncomment and fill in, one link per sponsor:
-<p align="center">
-  <sub>🏆 Premium Sponsors · $500 a month</sub>
-  <br>
-  <a href="https://example.com"><img src="https://example.com/logo.svg" alt="Company" height="60"></a>
-</p>
--->
+## 🚀 Tek komutla kurulum
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/Skyfay/SkySend/main/docs/public/readme-banner.png" alt="The SkySend share page on a desktop and a file request on a phone" width="800">
-</div>
+Docker kurulu olmayan boş bir Linux sunucuda bile tek komut yeter:
 
-### What is SkySend?
+```bash
+curl -fsSL https://raw.githubusercontent.com/xhawarx/hawarsend/main/install.sh | sudo bash
+```
 
-SkySend shares files and notes so that only the recipient can read them. Everything is encrypted in the browser before it leaves the device, and the key travels in the fragment of the share link, which browsers never send to a server. The server stores ciphertext and nothing else.
+Betik şunları yapar:
 
-It runs as one Docker container with SQLite and needs no accounts. Host your own instance, or use one of the [public instances](https://docs.skysend.app/instances), and if you run one yourself, you can [add it to the list](https://docs.skysend.app/instances).
+1. Docker'ı kurar (yoksa).
+2. Domain sorar. Domain verirsen Caddy ile otomatik HTTPS (Let's Encrypt) kurar.
+3. Güçlü bir admin şifresi üretir, ayarları `/opt/hawarsend/.env` içine yazar.
+4. HawarSend'i başlatır ve adresi, admin şifresini ekrana yazar.
 
-Inspired by [timvisee/send](https://github.com/timvisee/send), the community fork of Mozilla Send, and by [PrivateBin](https://privatebin.info/), SkySend is built from scratch with higher security standards, more features and a minimal, maintainable codebase. Its whole crypto design is [documented](https://docs.skysend.app/developer-guide/crypto/).
+Domain'in DNS A kaydını sunucunun IP'sine yönlendirmeyi unutma. Soru sormadan kurmak için:
 
-## ✨ Highlights
+```bash
+curl -fsSL https://raw.githubusercontent.com/xhawarx/hawarsend/main/install.sh | sudo HAWARSEND_DOMAIN=send.ornek.com HAWARSEND_NONINTERACTIVE=1 bash
+```
 
-- **Zero knowledge** - AES-256-GCM in the browser, and the key never leaves the share link
-- **Files and folders** - single files, several at once or a whole folder, zipped in the browser, with size and file limits you set yourself
-- **Notes made of blocks** - text and Markdown, passwords with a generator, code with highlighting and SSH keys, combined in one note
-- **File and note requests** - send someone an upload link, and the files or the note they send are encrypted for you alone
-- **Shares that delete themselves** - expiry times, download and view limits, and burn after reading
-- **Password protection** - an optional password on top of the link, derived with Argon2id
-- **A CLI for the terminal** - upload, download and notes with the same encryption, plus an interactive TUI
-- **No accounts** - My Links lives in the browser, and optional OIDC sign-in limits who may share
-- **Runs anywhere** - local storage or any S3-compatible bucket, 15 languages and three themes
+Güncellemek ve kaldırmak:
 
-## 🔒 Security Design
+```bash
+curl -fsSL https://raw.githubusercontent.com/xhawarx/hawarsend/main/install.sh | sudo bash -s update
+```
 
-| Component | Algorithm |
-| :--- | :--- |
-| Secret key | 256-bit random, in the URL fragment only |
-| Key derivation | HKDF-SHA256, a separate key for content, metadata and auth |
-| File encryption | AES-256-GCM, streamed in 64 KB records |
-| Note and metadata encryption | AES-256-GCM with a random IV |
-| Auth token | HMAC-SHA256 |
-| Password KDF | Argon2id (WASM) |
-| File requests | HPKE (RFC 9180), P-256 and AES-256-GCM |
+```bash
+curl -fsSL https://raw.githubusercontent.com/xhawarx/hawarsend/main/install.sh | sudo bash -s uninstall
+```
 
-## 🚀 Quick Start
+Kaldırma yalnızca container'ları durdurur, verilerin `/opt/hawarsend` içinde kalır.
+
+### Docker Compose ile elle kurulum
 
 ```yaml
-# docker-compose.yml
 services:
-  skysend:
-    image: skyfay/skysend:latest
-    container_name: skysend
-    restart: always
+  hawarsend:
+    image: ghcr.io/xhawarx/hawarsend:latest
+    restart: unless-stopped
     ports:
       - "3000:3000"
     volumes:
       - ./data:/data
       - ./uploads:/uploads
     environment:
-      - BASE_URL=http://localhost:3000
+      - BASE_URL=https://send.ornek.com
+      - ADMIN_PASSWORD=en-az-12-karakterlik-guclu-bir-sifre
+      - TRUST_PROXY=true
 ```
+
+Şifreleme tarayıcının Web Crypto API'sini kullanır ve bu API yalnızca HTTPS ya da `localhost`
+üzerinde çalışır. Önüne Caddy, Nginx ya da Traefik gibi HTTPS sağlayan bir ters vekil koy.
+
+### Coolify
+
+Depoyu "Docker Compose" uygulaması olarak ekle, compose dosyası `/docker-compose.yml`. Domain'i
+`skysend` servisine ver ve ortam değişkenlerine `ADMIN_PASSWORD` ekle. `BASE_URL` Coolify'ın
+verdiği adresten otomatik alınır.
+
+## 🛡️ Admin paneli
+
+`ADMIN_PASSWORD` tanımlıysa panel `https://<domain>/admin` adresinde açılır. Tanımlı değilse
+panel ve API'si tamamen kapalıdır.
+
+- Aktif dosya paylaşımları, notlar, açık istekler ve kullanılan depolama.
+- Kimliğe göre arama, aktif ya da süresi dolmuş filtresi, onaylı silme.
+- Süresi dolanları tek tuşla temizleme, sunucu ayarlarını görüntüleme.
+
+Panel de sunucu gibi kördür: yalnızca kimlik, boyut, sayaç ve tarih görür. Dosya adlarını,
+içerikleri ve anahtarları göremez.
+
+| Değişken | Varsayılan | Açıklama |
+| :--- | :--- | :--- |
+| `ADMIN_PASSWORD` | yok | Panelin şifresi, en az 12 karakter. Boşsa panel kapalı. |
+| `ADMIN_SESSION_DURATION` | `7200` | Oturum süresi, saniye. |
+| `ADMIN_ALLOWED_IPS` | herkes | Paneli yalnızca bu IP ya da ağlara aç, örnek `203.0.113.7,10.0.0.0/8`. Diğerleri 404 alır. |
+
+Tüm ayarlar için: [ortam değişkenleri](docs/user-guide/configuration/environment-variables.md).
+
+## 🔒 Güvenlik
+
+- AES-256-GCM ile tarayıcıda şifreleme, HKDF-SHA256 ile anahtar türetme, Argon2id parolalar.
+- Anahtar URL'nin `#` kısmında, sunucuya ve loglara asla ulaşmaz.
+- IP başına hız sınırı ve yükleme kotası, IP'ler yalnızca HMAC ile karıştırılmış olarak tutulur.
+- Parola denemelerinde kilitleme. Admin girişinde ayrıca tüm IP'ler için toplam deneme sınırı.
+- Admin oturumu: HttpOnly, SameSite=Strict çerez, çıkışta sunucu tarafında sonlandırılır.
+- Sıkı CSP, HSTS, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`, `Permissions-Policy`.
+- Container root olmayan bir kullanıcıyla çalışır.
+
+Bir güvenlik açığı bulursan lütfen herkese açık bir issue yerine GitHub'ın
+[özel güvenlik bildirimi](https://github.com/xhawarx/hawarsend/security/advisories/new) özelliğini kullan.
+
+## 🧑‍💻 Geliştirme
 
 ```bash
-docker compose up -d
+pnpm install
+cp .env.dev.example .env.dev
+pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). The documentation covers [every environment variable](https://docs.skysend.app/user-guide/configuration/environment-variables), [reverse proxies](https://docs.skysend.app/user-guide/self-hosting/reverse-proxy) and [S3 storage](https://docs.skysend.app/user-guide/configuration/s3). Images are built for AMD64 and ARM64.
+Web arayüzü `http://localhost:5173`, API `http://localhost:3000` adresinde açılır.
+`pnpm validate` lint, tip kontrolü ve testleri çalıştırır.
 
-The [CLI client](https://docs.skysend.app/user-guide/client-cli/) installs with one line, on Linux and macOS:
+## 🌍 English
+
+HawarSend encrypts files and notes in the browser before upload. The key lives in the part of the
+link after `#`, which browsers never send, so the server only ever stores ciphertext.
+
+Install on any Linux server with one command:
 
 ```bash
-curl -fsSL https://skysend.app/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/xhawarx/hawarsend/main/install.sh | sudo bash
 ```
 
-On Windows, in PowerShell:
+It installs Docker if needed, asks for a domain, sets up automatic HTTPS with Caddy, generates an
+admin password and starts everything. The admin panel lives at `/admin` once `ADMIN_PASSWORD` is
+set, and it sees only IDs, sizes, counters and times, never names, contents or keys.
 
-```powershell
-irm https://skysend.app/install.ps1 | iex
-```
+## 📝 Lisans ve teşekkür
 
-## 💖 Sponsors
+HawarSend, [Skyfay](https://github.com/Skyfay) tarafından geliştirilen açık kaynak
+[SkySend](https://github.com/Skyfay/SkySend) projesinin bir çatalıdır. Şifreleme altyapısı ve
+güvenlik tasarımı SkySend'den gelir. Teşekkürler!
 
-SkySend is free and open source. [Sponsoring it](https://github.com/sponsors/Skyfay) keeps it that way, and from $15 a month or $100 once your name shows up here by itself.
-
-<!-- Company Sponsors ($150 a month): their logo shown large, linking to their site. Kept by hand,
-     uncomment and fill in, one link per sponsor:
-<p align="center">
-  <strong>🏢 Company Sponsors</strong> · $150 a month
-  <br><br>
-  <a href="https://example.com"><img src="https://example.com/logo.svg" alt="Company" height="80"></a>
-</p>
--->
-
-<p align="center">
-  <a href="https://github.com/sponsors/Skyfay">
-    <img src="https://raw.githubusercontent.com/Skyfay/DBackup/sponsors/sponsors.svg" alt="The monthly sponsors of SkySend" width="800">
-  </a>
-</p>
-
-### One-time Sponsors
-
-<!-- Patrons ($500 once): the image below draws them with their avatar. Kay sponsored while this
-     tier still came with a logo, so his stays here by hand and the image leaves him out. -->
-<p align="center">
-  <strong>🏆 Patrons</strong> · $500 once
-  <br><br>
-  <a href="https://www.ictwebsolution.nl"><img src="https://ictwebsolution.nl/wp-content/uploads/2021/05/Logo-ICTWebSolution.png" alt="ICT WebSolution" height="60"></a>
-  <br>
-  <a href="https://www.ictwebsolution.nl"><sub>Kay van Aarssen</sub></a>
-</p>
-
-<p align="center">
-  <a href="https://github.com/sponsors/Skyfay">
-    <img src="https://raw.githubusercontent.com/Skyfay/DBackup/sponsors/sponsors-onetime.svg" alt="The one-time sponsors of SkySend" width="800">
-  </a>
-</p>
-
-<!-- The two images are drawn every night by the Sponsors workflow of Skyfay/DBackup, which publishes
-     the GitHub Sponsors of Skyfay to its sponsors branch for both READMEs. -->
-
-## 🛠️ Contributing
-
-Pull requests go into the `dev` branch, never into `main`. [CONTRIBUTING.md](CONTRIBUTING.md) explains the setup and the workflow, and the [Developer Guide](https://docs.skysend.app/developer-guide/) the architecture, the crypto library and the tests. Please read [PHILOSOPHY.md](PHILOSOPHY.md) before proposing a feature.
-
-## 💬 Community & Support
-
-- 💬 **Discord**: [dc.skyfay.ch](https://dc.skyfay.ch)
-- 🐛 **Issues**: bugs and feature requests on [GitHub Issues](https://github.com/Skyfay/SkySend/issues)
-- 📧 **Support**: [support@skysend.app](mailto:support@skysend.app)
-- 🔒 **Security**: report vulnerabilities privately as described in [SECURITY.md](SECURITY.md), never in a public issue
-
-## 🤖 AI Development Transparency
-
-The architecture, the cryptographic design, the technology stack and the feature specifications of SkySend were designed and directed by a human system engineer. The code is written by AI coding agents that follow those specifications and the guidelines of the project. Every feature is tested by hand, backed by unit tests with coverage tracking, CodeQL and security audits run by AI agents. End-to-end tests run the production build in Chromium, Firefox and WebKit on every pull request that touches the app, also behind Caddy and Nginx with HTTPS, and fail it when a key, a filename or any content reaches the server.
-
-A formal security audit by an external firm has not been done yet. Independent security researchers have reviewed parts of the code and reported vulnerabilities privately. Every report was fixed in a release and published as an advisory that credits the reporter, see [Security Advisories](https://github.com/Skyfay/SkySend/security/advisories). The crypto design is [publicly documented](https://docs.skysend.app/developer-guide/crypto/) to make a full review easy. If you review code or work in security, your findings are very welcome, see [SECURITY.md](SECURITY.md) for how to report them.
-
-## 📝 License
-
-[GNU Affero General Public License v3.0](LICENSE). Any hosted instance must release its source code.
+[GNU Affero General Public License v3.0](LICENSE) ile lisanslanmıştır. HawarSend'i değiştirip
+herkese açık bir sunucuda çalıştırırsan, değiştirdiğin kaynak kodunu da kullanıcılarına açman gerekir.

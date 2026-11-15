@@ -1,7 +1,9 @@
 import { Hono, type Context } from "hono";
 import { createMiddleware } from "hono/factory";
 import { getCookie } from "hono/cookie";
-import { createHash, randomBytes } from "node:crypto";
+import { createHash, randomBytes, randomUUID } from "node:crypto";
+import { isIP } from "node:net";
+import { bodyLimit } from "hono/body-limit";
 import { SignJWT, jwtVerify } from "jose";
 import { z } from "zod";
 import { and, desc, eq, gt, or, sql } from "drizzle-orm";
@@ -12,6 +14,7 @@ import { getConfig } from "../lib/config.js";
 import { deleteFileRequest, runCleanup } from "../lib/cleanup.js";
 import { lockedResponse, type PasswordLockout } from "../lib/password-lockout.js";
 import { getClientIp } from "../middleware/rate-limit.js";
+import { trustedProxyList } from "../lib/trusted-proxies.js";
 import { requireJson } from "../middleware/require-json.js";
 import type { StorageBackend } from "../storage/types.js";
 
@@ -22,15 +25,37 @@ import type { StorageBackend } from "../storage/types.js";
  * No key, filename or note content ever reaches the server, so none can be shown here.
  *
  * The session is an HS256 JWT in an HttpOnly cookie scoped to /api/admin with SameSite=Strict.
- * Its signing key lives in memory only, so a restart signs every admin out.
+ * Its signing key and the list of open sessions live in memory only, so a restart signs every
+ * admin out, and a logout ends its session on the server, not only in the browser.
+ *
+ * Guessing is limited twice: per client by the shared password lockout, and for everyone together
+ * by GLOBAL_MAX_FAILURES per hour, so a pool of addresses cannot keep guessing either.
  */
 
 export const ADMIN_COOKIE = "hawarsend-admin";
 const LOCKOUT_KEY = "admin-login";
 const PAGE_SIZE = 50;
+const MAX_SESSIONS = 50;
+const GLOBAL_MAX_FAILURES = 30;
+const GLOBAL_WINDOW_MS = 60 * 60 * 1000;
 const UUID_RE = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
 
 const signingKey = randomBytes(32);
+/** Open sessions by ID, with the time each one ends. */
+const sessions = new Map<string, number>();
+/** Times of failed logins from any client within GLOBAL_WINDOW_MS. */
+let globalFailures: number[] = [];
+
+function globallyLocked(now: number): boolean {
+  globalFailures = globalFailures.filter((t) => now - t < GLOBAL_WINDOW_MS);
+  return globalFailures.length >= GLOBAL_MAX_FAILURES;
+}
+
+/** Forgets every session and failure. For tests. */
+export function resetAdminState(): void {
+  sessions.clear();
+  globalFailures = [];
+}
 
 const loginSchema = z.object({ password: z.string().min(1).max(512) });
 const kindSchema = z.enum(["uploads", "notes", "requests"]);
@@ -48,15 +73,35 @@ function cookieAttributes(maxAgeSec: number): string {
   return parts.join("; ");
 }
 
-async function isAdmin(c: Context): Promise<boolean> {
+async function sessionId(c: Context): Promise<string | null> {
   const token = getCookie(c, ADMIN_COOKIE);
-  if (!token) return false;
+  if (!token) return null;
   try {
     const { payload } = await jwtVerify(token, signingKey, { algorithms: ["HS256"] });
-    return payload["sub"] === "admin";
+    if (payload["sub"] !== "admin" || typeof payload.jti !== "string") return null;
+    const endsAt = sessions.get(payload.jti);
+    if (endsAt === undefined || endsAt <= Date.now()) {
+      sessions.delete(payload.jti);
+      return null;
+    }
+    return payload.jti;
   } catch {
-    return false;
+    return null;
   }
+}
+
+async function isAdmin(c: Context): Promise<boolean> {
+  return (await sessionId(c)) !== null;
+}
+
+function openSession(durationSec: number): string {
+  const now = Date.now();
+  for (const [id, endsAt] of sessions) if (endsAt <= now) sessions.delete(id);
+  // The oldest session goes first when the list is full.
+  while (sessions.size >= MAX_SESSIONS) sessions.delete(sessions.keys().next().value!);
+  const id = randomUUID();
+  sessions.set(id, now + durationSec * 1000);
+  return id;
 }
 
 const requireAdmin = createMiddleware(async (c, next) => {
@@ -235,15 +280,29 @@ async function deleteItem(
 export function createAdminRoute(options: { storage: StorageBackend; lockout: PasswordLockout }) {
   const { storage, lockout } = options;
   const route = new Hono();
+  const allowed = getConfig().ADMIN_ALLOWED_IPS;
+  const allowList = allowed ? trustedProxyList(allowed) : null;
 
   route.use("*", async (c, next) => {
+    if (allowList) {
+      // The limit key of an IPv6 client is its /64 network, checked by its first address.
+      const address = getClientIp(c, getConfig().TRUST_PROXY).split("/", 1)[0] ?? "";
+      const family = isIP(address);
+      if (!family || !allowList.check(address, family === 4 ? "ipv4" : "ipv6")) {
+        return c.json({ error: "Not found" }, 404);
+      }
+    }
     await next();
     c.header("Cache-Control", "no-store");
   });
 
   route.get("/session", async (c) => c.json({ authenticated: await isAdmin(c) }));
 
-  route.post("/login", requireJson, async (c) => {
+  route.post(
+    "/login",
+    requireJson,
+    bodyLimit({ maxSize: 16 * 1024, onError: (c) => c.json({ error: "Request body too large" }, 413) }),
+    async (c) => {
     const config = getConfig();
     const ip = getClientIp(c, config.TRUST_PROXY);
     const parsed = loginSchema.safeParse(await c.req.json().catch(() => null));
@@ -252,10 +311,15 @@ export function createAdminRoute(options: { storage: StorageBackend; lockout: Pa
     // Checked again after the last await, so parallel guesses cannot pass together.
     const locked = lockedResponse(c, lockout, LOCKOUT_KEY, ip);
     if (locked) return locked;
+    if (globallyLocked(Date.now())) {
+      c.header("Retry-After", String(GLOBAL_WINDOW_MS / 1000));
+      return c.json({ error: "Too many failed attempts. Try again later." }, 429);
+    }
 
     const expected = digest(config.ADMIN_PASSWORD ?? "");
     if (!config.ADMIN_PASSWORD || !constantTimeEqual(digest(parsed.data.password), expected)) {
       lockout.recordFailure(LOCKOUT_KEY, ip);
+      globalFailures.push(Date.now());
       return c.json({ error: "Wrong password" }, 401);
     }
     lockout.recordSuccess(LOCKOUT_KEY, ip);
@@ -263,6 +327,7 @@ export function createAdminRoute(options: { storage: StorageBackend; lockout: Pa
     const duration = config.ADMIN_SESSION_DURATION;
     const token = await new SignJWT({ sub: "admin" })
       .setProtectedHeader({ alg: "HS256" })
+      .setJti(openSession(duration))
       .setIssuedAt()
       .setExpirationTime(`${duration}s`)
       .sign(signingKey);
@@ -270,7 +335,9 @@ export function createAdminRoute(options: { storage: StorageBackend; lockout: Pa
     return c.json({ ok: true });
   });
 
-  route.post("/logout", (c) => {
+  route.post("/logout", requireJson, async (c) => {
+    const id = await sessionId(c);
+    if (id) sessions.delete(id);
     c.header("Set-Cookie", `${ADMIN_COOKIE}=; ${cookieAttributes(0)}`);
     return c.json({ ok: true });
   });

@@ -848,6 +848,11 @@
     "previous": "Vorherige Seite",
     "next": "Nächste Seite",
     "settingsTitle": "Server-Einstellungen",
-    "settingsText": "Nur lesbar. Ändere sie über die Umgebungsvariablen des Servers und starte ihn neu."
+    "settingsText": "Nur lesbar. Ändere sie über die Umgebungsvariablen des Servers und starte ihn neu.",
+    "search": "Nach ID suchen",
+    "filter": "Filter",
+    "filterAll": "Alle",
+    "refresh": "Aktualisieren",
+    "noMatch": "Nichts passt zur Suche oder zum Filter."
   }
 }
