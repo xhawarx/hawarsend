@@ -35,7 +35,7 @@ saklar: dosya adını, içeriği ya da anahtarı göremez.
 Docker kurulu olmayan boş bir Linux sunucuda bile tek komut yeter:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/xhawarx/hawarsend/main/install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/xhawarx/hawarsend/hawarsend-v2/install.sh | sudo bash
 ```
 
 Betik şunları yapar:
@@ -48,17 +48,17 @@ Betik şunları yapar:
 Domain'in DNS A kaydını sunucunun IP'sine yönlendirmeyi unutma. Soru sormadan kurmak için:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/xhawarx/hawarsend/main/install.sh | sudo HAWARSEND_DOMAIN=send.ornek.com HAWARSEND_NONINTERACTIVE=1 bash
+curl -fsSL https://raw.githubusercontent.com/xhawarx/hawarsend/hawarsend-v2/install.sh | sudo HAWARSEND_DOMAIN=send.ornek.com HAWARSEND_NONINTERACTIVE=1 bash
 ```
 
 Güncellemek ve kaldırmak:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/xhawarx/hawarsend/main/install.sh | sudo bash -s update
+curl -fsSL https://raw.githubusercontent.com/xhawarx/hawarsend/hawarsend-v2/install.sh | sudo bash -s update
 ```
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/xhawarx/hawarsend/main/install.sh | sudo bash -s uninstall
+curl -fsSL https://raw.githubusercontent.com/xhawarx/hawarsend/hawarsend-v2/install.sh | sudo bash -s uninstall
 ```
 
 Kaldırma yalnızca container'ları durdurur, verilerin `/opt/hawarsend` içinde kalır.
@@ -68,7 +68,7 @@ Kaldırma yalnızca container'ları durdurur, verilerin `/opt/hawarsend` içinde
 ```yaml
 services:
   hawarsend:
-    image: ghcr.io/xhawarx/hawarsend:latest
+    image: ghcr.io/xhawarx/hawarsend:edge
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -142,7 +142,7 @@ link after `#`, which browsers never send, so the server only ever stores cipher
 Install on any Linux server with one command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/xhawarx/hawarsend/main/install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/xhawarx/hawarsend/hawarsend-v2/install.sh | sudo bash
 ```
 
 It installs Docker if needed, asks for a domain, sets up automatic HTTPS with Caddy, generates an
