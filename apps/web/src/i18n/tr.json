@@ -858,6 +858,25 @@
     "filter": "Filtre",
     "filterAll": "Tümü",
     "refresh": "Yenile",
-    "noMatch": "Aramaya veya filtreye uyan bir şey yok."
+    "noMatch": "Aramaya veya filtreye uyan bir şey yok.",
+    "tabLimits": "Limitler",
+    "limitsTitle": "Yükleme limitleri",
+    "limitsText": "Değişiklikler bir sonraki yüklemede geçerli olur, yeniden başlatma gerekmez. Yeniden başlatmada da korunur ve ortam değişkenlerinin önüne geçer.",
+    "limit_FILE_MAX_SIZE": "En büyük yükleme",
+    "limitHelp_FILE_MAX_SIZE": "Bir paylaşımın tüm dosyalarıyla birlikte en fazla boyutu.",
+    "limit_FILE_UPLOAD_QUOTA_BYTES": "Ziyaretçi başına yükleme kotası",
+    "limitHelp_FILE_UPLOAD_QUOTA_BYTES": "Bir adresin günde yükleyebileceği miktar. Kapalı, sınır yok demek.",
+    "limit_FILE_MAX_FILES_PER_UPLOAD": "Yükleme başına dosya",
+    "limitHelp_FILE_MAX_FILES_PER_UPLOAD": "Bir paylaşımda en fazla kaç dosya olabileceği.",
+    "quotaOff": "Kapalı",
+    "limitSaved": "Limit kaydedildi. Bir sonraki yüklemede geçerli.",
+    "limitReset": "Sunucunun varsayılanına dönüldü.",
+    "limitResetTo": "Varsayılana dön, {{value}}",
+    "limitDefault": "Varsayılan {{value}}",
+    "limitCustom": "Özel",
+    "limitUnit": "Birim",
+    "limitSave": "Kaydet",
+    "limitRange": "{{min}} ile {{max}} arasında bir değer seç.",
+    "limitInvalid": "Sunucu bu değeri kabul etmedi."
   }
 }

@@ -15,6 +15,13 @@ import { deleteFileRequest, runCleanup } from "../lib/cleanup.js";
 import { lockedResponse, type PasswordLockout } from "../lib/password-lockout.js";
 import { getClientIp } from "../middleware/rate-limit.js";
 import { trustedProxyList } from "../lib/trusted-proxies.js";
+import {
+  RUNTIME_SETTING_KEYS,
+  describeRuntimeSettings,
+  parseSettingValue,
+  setRuntimeSetting,
+  type RuntimeSettingKey,
+} from "../lib/runtime-settings.js";
 import { requireJson } from "../middleware/require-json.js";
 import type { StorageBackend } from "../storage/types.js";
 
@@ -346,6 +353,7 @@ export function createAdminRoute(options: { storage: StorageBackend; lockout: Pa
   route.use("/settings", requireAdmin);
   route.use("/items/*", requireAdmin);
   route.use("/cleanup", requireAdmin);
+  route.use("/limits", requireAdmin);
 
   route.get("/stats", (c) => c.json(countStats()));
   route.get("/settings", (c) => c.json(settingsSummary()));
@@ -369,6 +377,40 @@ export function createAdminRoute(options: { storage: StorageBackend; lockout: Pa
     const deleted = await deleteItem(storage, kind.data, id);
     return deleted ? c.json({ ok: true }) : c.json({ error: "Not found" }, 404);
   });
+
+  route.get("/limits", (c) => c.json({ limits: describeRuntimeSettings() }));
+
+  /**
+   * PUT /api/admin/limits
+   * Body: { "FILE_MAX_SIZE": "10GB" | 10737418240 | null, ... }. null goes back to the value
+   * of the environment. Every value is checked before any is stored.
+   */
+  route.put(
+    "/limits",
+    requireJson,
+    bodyLimit({ maxSize: 4 * 1024, onError: (c) => c.json({ error: "Request body too large" }, 413) }),
+    async (c) => {
+      const body: unknown = await c.req.json().catch(() => null);
+      if (!body || typeof body !== "object" || Array.isArray(body)) {
+        return c.json({ error: "Invalid request" }, 400);
+      }
+      const changes: [RuntimeSettingKey, number | null][] = [];
+      for (const [key, raw] of Object.entries(body)) {
+        if (!RUNTIME_SETTING_KEYS.includes(key as RuntimeSettingKey)) {
+          return c.json({ error: `Unknown setting ${key}` }, 400);
+        }
+        if (raw === null) {
+          changes.push([key as RuntimeSettingKey, null]);
+          continue;
+        }
+        const parsed = parseSettingValue(key as RuntimeSettingKey, raw);
+        if (typeof parsed === "string") return c.json({ error: `${key}: ${parsed}`, key }, 400);
+        changes.push([key as RuntimeSettingKey, parsed]);
+      }
+      for (const [key, value] of changes) setRuntimeSetting(key, value);
+      return c.json({ limits: describeRuntimeSettings() });
+    },
+  );
 
   route.post("/cleanup", requireJson, async (c) => {
     const removed = await runCleanup(storage);

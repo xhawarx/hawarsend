@@ -263,6 +263,8 @@ When `OIDC_ISSUER`, `OIDC_CLIENT_ID`, and `OIDC_CLIENT_SECRET` are all set, OIDC
 | `ADMIN_SESSION_DURATION` | ❌ | `7200` | Lifetime of an admin session in seconds, at most 604800 (7 days). A logout ends the session on the server, and a restart ends all of them. |
 | `ADMIN_ALLOWED_IPS` | ❌ | - | Comma-separated addresses or networks (`203.0.113.7,10.0.0.0/8`) that may reach the admin API. Every other client gets a 404. Behind a reverse proxy it needs `TRUST_PROXY=true`. |
 
+The Limits tab of the panel changes `FILE_MAX_SIZE` (1 MB to 100 TB), `FILE_UPLOAD_QUOTA_BYTES` (off up to 1 PB) and `FILE_MAX_FILES_PER_UPLOAD` (1 to 10000) while the server runs. A value set there is stored in the database, applies to the next upload and wins over the environment variable until it is reset in the panel. Sizes accept `TB` and `PB` as well, in the panel and in the environment.
+
 The admin panel shows only what the server stores anyway: IDs, sizes, counters and times. It never sees a key, a filename or note content. Failed logins are limited per client by the password lockout, and to 30 per hour for all clients together.
 
 ## Docker

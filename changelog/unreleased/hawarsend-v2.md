@@ -5,10 +5,14 @@
 - **server**: A web admin API at /api/admin lists, counts and deletes shares while ADMIN_PASSWORD is set, behind a password lockout and an HttpOnly session cookie.
 - **web**: An admin panel at /admin shows the stats, the shares, the notes, the file requests and the server settings of the instance.
 - **web**: Turkish is now available as a language.
+- **server**: The largest upload, the upload quota and the files per upload can be changed in the admin panel while the server runs.
+- **web**: The Limits tab of the admin panel offers quick picks and a custom value with MB, GB or TB.
+- **server**: Byte sizes accept TB and PB.
 
 ### 🎨 Improvements
 
 - **web**: The Midnight theme has navy tinted dark surfaces and a new HawarSend logo.
+- **web**: The upload page has no headline and the footer shows the tagline and a By Hawar Software byline.
 
 ### 🔒 Security
 

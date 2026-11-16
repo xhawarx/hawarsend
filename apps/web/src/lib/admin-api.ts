@@ -102,3 +102,26 @@ export const deleteAdminItem = (kind: AdminKind, id: string) =>
 
 export const runAdminCleanup = () =>
   request("/cleanup", cleanupSchema, { method: "POST", body: "{}" });
+
+export type AdminLimitKey = "FILE_MAX_SIZE" | "FILE_UPLOAD_QUOTA_BYTES" | "FILE_MAX_FILES_PER_UPLOAD";
+
+const limitSchema = z.object({
+  key: z.enum(["FILE_MAX_SIZE", "FILE_UPLOAD_QUOTA_BYTES", "FILE_MAX_FILES_PER_UPLOAD"]),
+  kind: z.enum(["bytes", "count"]),
+  value: z.number(),
+  envDefault: z.number(),
+  overridden: z.boolean(),
+  min: z.number(),
+  max: z.number(),
+});
+export type AdminLimit = z.infer<typeof limitSchema>;
+
+const limitsSchema = z.object({ limits: z.array(limitSchema) });
+
+export const fetchAdminLimits = () => request("/limits", limitsSchema).then((r) => r.limits);
+
+/** A number of bytes or files, or null to go back to the value of the environment. */
+export const saveAdminLimits = (changes: Partial<Record<AdminLimitKey, number | null>>) =>
+  request("/limits", limitsSchema, { method: "PUT", body: JSON.stringify(changes) }).then(
+    (r) => r.limits,
+  );

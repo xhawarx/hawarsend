@@ -858,6 +858,25 @@
     "filter": "Filtrer",
     "filterAll": "Alle",
     "refresh": "Oppdater",
-    "noMatch": "Ingenting samsvarer med søket eller filteret."
+    "noMatch": "Ingenting samsvarer med søket eller filteret.",
+    "tabLimits": "Grenser",
+    "limitsTitle": "Opplastingsgrenser",
+    "limitsText": "Endringer gjelder for neste opplasting, uten omstart. De beholdes etter omstarter og går foran miljøvariablene.",
+    "limit_FILE_MAX_SIZE": "Største opplasting",
+    "limitHelp_FILE_MAX_SIZE": "Det meste én deling kan inneholde, alle filene til sammen.",
+    "limit_FILE_UPLOAD_QUOTA_BYTES": "Opplastingskvote per besøkende",
+    "limitHelp_FILE_UPLOAD_QUOTA_BYTES": "Hvor mye én adresse kan laste opp per dag. Av betyr ingen grense.",
+    "limit_FILE_MAX_FILES_PER_UPLOAD": "Filer per opplasting",
+    "limitHelp_FILE_MAX_FILES_PER_UPLOAD": "Det største antallet filer én deling kan inneholde.",
+    "quotaOff": "Av",
+    "limitSaved": "Grensen er lagret. Den gjelder for neste opplasting.",
+    "limitReset": "Tilbake til serverens standardverdi.",
+    "limitResetTo": "Tilbake til standard, {{value}}",
+    "limitDefault": "Standard {{value}}",
+    "limitCustom": "Egendefinert",
+    "limitUnit": "Enhet",
+    "limitSave": "Lagre",
+    "limitRange": "Velg en verdi fra {{min}} til {{max}}.",
+    "limitInvalid": "Serveren godtok ikke denne verdien."
   }
 }

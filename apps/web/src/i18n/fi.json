@@ -858,6 +858,25 @@
     "filter": "Suodata",
     "filterAll": "Kaikki",
     "refresh": "Päivitä",
-    "noMatch": "Mikään ei vastaa hakua tai suodatinta."
+    "noMatch": "Mikään ei vastaa hakua tai suodatinta.",
+    "tabLimits": "Rajat",
+    "limitsTitle": "Lähetysrajat",
+    "limitsText": "Muutokset tulevat voimaan seuraavassa lähetyksessä ilman uudelleenkäynnistystä. Ne säilyvät uudelleenkäynnistysten yli ja ohittavat ympäristömuuttujat.",
+    "limit_FILE_MAX_SIZE": "Suurin lähetys",
+    "limitHelp_FILE_MAX_SIZE": "Suurin koko, jonka yksi jako voi sisältää kaikki tiedostot yhteensä.",
+    "limit_FILE_UPLOAD_QUOTA_BYTES": "Lähetyskiintiö kävijää kohti",
+    "limitHelp_FILE_UPLOAD_QUOTA_BYTES": "Kuinka paljon yksi osoite voi lähettää päivässä. Pois päältä tarkoittaa ei rajaa.",
+    "limit_FILE_MAX_FILES_PER_UPLOAD": "Tiedostoja lähetystä kohti",
+    "limitHelp_FILE_MAX_FILES_PER_UPLOAD": "Suurin määrä tiedostoja yhdessä jaossa.",
+    "quotaOff": "Pois",
+    "limitSaved": "Raja tallennettu. Se otetaan käyttöön seuraavassa lähetyksessä.",
+    "limitReset": "Palautettu palvelimen oletukseen.",
+    "limitResetTo": "Palautettu oletukseen, {{value}}",
+    "limitDefault": "Oletus {{value}}",
+    "limitCustom": "Mukautettu",
+    "limitUnit": "Yksikkö",
+    "limitSave": "Tallenna",
+    "limitRange": "Valitse arvo väliltä {{min}}–{{max}}.",
+    "limitInvalid": "Palvelin ei hyväksynyt tätä arvoa."
   }
 }

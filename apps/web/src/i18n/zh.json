@@ -1251,6 +1251,25 @@
     "filter": "筛选",
     "filterAll": "全部",
     "refresh": "刷新",
-    "noMatch": "没有符合搜索或筛选条件的内容。"
+    "noMatch": "没有符合搜索或筛选条件的内容。",
+    "tabLimits": "限制",
+    "limitsTitle": "上传限制",
+    "limitsText": "更改将应用于下一次上传，无需重启。重启后仍会保留，并优先于环境变量。",
+    "limit_FILE_MAX_SIZE": "最大上传大小",
+    "limitHelp_FILE_MAX_SIZE": "一次分享可包含的最大总大小（所有文件合计）。",
+    "limit_FILE_UPLOAD_QUOTA_BYTES": "每位访客的上传配额",
+    "limitHelp_FILE_UPLOAD_QUOTA_BYTES": "每个地址每天可上传的数据量。关闭表示不限制。",
+    "limit_FILE_MAX_FILES_PER_UPLOAD": "每次上传的文件数",
+    "limitHelp_FILE_MAX_FILES_PER_UPLOAD": "一次分享最多可包含的文件数。",
+    "quotaOff": "关闭",
+    "limitSaved": "限制已保存，将应用于下一次上传。",
+    "limitReset": "已恢复为服务器默认值。",
+    "limitResetTo": "已恢复为默认值：{{value}}",
+    "limitDefault": "默认 {{value}}",
+    "limitCustom": "自定义",
+    "limitUnit": "单位",
+    "limitSave": "保存",
+    "limitRange": "请选择 {{min}} 到 {{max}} 之间的值。",
+    "limitInvalid": "服务器未接受此值。"
   }
 }

@@ -858,6 +858,25 @@
     "filter": "Filtrer",
     "filterAll": "Tous",
     "refresh": "Actualiser",
-    "noMatch": "Aucun résultat pour cette recherche ou ce filtre."
+    "noMatch": "Aucun résultat pour cette recherche ou ce filtre.",
+    "tabLimits": "Limites",
+    "limitsTitle": "Limites d'envoi",
+    "limitsText": "Les modifications s'appliquent au prochain envoi, sans redémarrage. Elles sont conservées après un redémarrage et priment sur les variables d'environnement.",
+    "limit_FILE_MAX_SIZE": "Envoi maximal",
+    "limitHelp_FILE_MAX_SIZE": "La taille maximale d'un partage, tous fichiers confondus.",
+    "limit_FILE_UPLOAD_QUOTA_BYTES": "Quota d'envoi par visiteur",
+    "limitHelp_FILE_UPLOAD_QUOTA_BYTES": "La quantité qu'une même adresse peut envoyer par jour. Désactivé signifie aucune limite.",
+    "limit_FILE_MAX_FILES_PER_UPLOAD": "Fichiers par envoi",
+    "limitHelp_FILE_MAX_FILES_PER_UPLOAD": "Le nombre maximal de fichiers dans un partage.",
+    "quotaOff": "Désactivé",
+    "limitSaved": "Limite enregistrée. Elle s'applique au prochain envoi.",
+    "limitReset": "Retour à la valeur par défaut du serveur.",
+    "limitResetTo": "Retour à la valeur par défaut, {{value}}",
+    "limitDefault": "Par défaut {{value}}",
+    "limitCustom": "Personnalisé",
+    "limitUnit": "Unité",
+    "limitSave": "Enregistrer",
+    "limitRange": "Choisissez une valeur entre {{min}} et {{max}}.",
+    "limitInvalid": "Le serveur n'a pas accepté cette valeur."
   }
 }

@@ -858,6 +858,25 @@
     "filter": "Filtrera",
     "filterAll": "Alla",
     "refresh": "Uppdatera",
-    "noMatch": "Inget matchar sökningen eller filtret."
+    "noMatch": "Inget matchar sökningen eller filtret.",
+    "tabLimits": "Gränser",
+    "limitsTitle": "Uppladdningsgränser",
+    "limitsText": "Ändringar gäller vid nästa uppladdning, ingen omstart behövs. De behålls efter omstarter och går före miljövariablerna.",
+    "limit_FILE_MAX_SIZE": "Största uppladdning",
+    "limitHelp_FILE_MAX_SIZE": "Det mesta en delning får innehålla, alla filer tillsammans.",
+    "limit_FILE_UPLOAD_QUOTA_BYTES": "Uppladdningskvot per besökare",
+    "limitHelp_FILE_UPLOAD_QUOTA_BYTES": "Hur mycket en adress får ladda upp per dag. Av betyder ingen gräns.",
+    "limit_FILE_MAX_FILES_PER_UPLOAD": "Filer per uppladdning",
+    "limitHelp_FILE_MAX_FILES_PER_UPLOAD": "Det största antalet filer en delning får innehålla.",
+    "quotaOff": "Av",
+    "limitSaved": "Gränsen sparades. Den gäller vid nästa uppladdning.",
+    "limitReset": "Tillbaka till serverns standardvärde.",
+    "limitResetTo": "Tillbaka till standard, {{value}}",
+    "limitDefault": "Standard {{value}}",
+    "limitCustom": "Anpassad",
+    "limitUnit": "Enhet",
+    "limitSave": "Spara",
+    "limitRange": "Välj ett värde från {{min}} till {{max}}.",
+    "limitInvalid": "Servern godtog inte det här värdet."
   }
 }

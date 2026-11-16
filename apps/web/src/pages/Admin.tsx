@@ -15,10 +15,12 @@ import {
   Search,
   Settings2,
   ShieldCheck,
+  SlidersHorizontal,
   StickyNote,
   Trash2,
   Upload,
 } from "lucide-react";
+import { AdminLimits } from "@/components/AdminLimits";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -317,6 +319,10 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             <Inbox />
             {t("admin.tabRequests")}
           </TabsTrigger>
+          <TabsTrigger value="limits">
+            <SlidersHorizontal />
+            {t("admin.tabLimits")}
+          </TabsTrigger>
           <TabsTrigger value="settings">
             <Settings2 />
             {t("admin.tabSettings")}
@@ -327,6 +333,9 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             <ItemList kind={kind} onError={handleError} onChanged={loadStats} />
           </TabsContent>
         ))}
+        <TabsContent value="limits">
+          <AdminLimits onError={handleError} />
+        </TabsContent>
         <TabsContent value="settings">
           <SettingsList settings={settings} />
         </TabsContent>

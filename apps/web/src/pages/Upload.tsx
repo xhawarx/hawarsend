@@ -42,14 +42,7 @@ function Hero() {
   const { t } = useTranslation();
   return (
     <div className="mx-auto max-w-2xl text-center">
-      <h1
-        data-slot="hero-title"
-        className="text-[34px] font-semibold leading-[1.06] tracking-[-0.04em] sm:text-[44px]"
-      >
-        {t("share.heroTitle")}{" "}
-        <span data-slot="accent" className="text-primary-text">{t("share.heroAccent")}</span>
-      </h1>
-      <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
+      <p className="text-[15px] leading-relaxed text-muted-foreground">
         {t("share.heroText")}{" "}
         <Link to="/how" className="font-medium text-primary-text hover:underline">
           {t("header.howItWorks")}

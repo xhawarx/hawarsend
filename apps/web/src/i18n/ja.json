@@ -1400,6 +1400,25 @@
     "filter": "絞り込み",
     "filterAll": "すべて",
     "refresh": "更新",
-    "noMatch": "検索または絞り込みに一致するものがありません。"
+    "noMatch": "検索または絞り込みに一致するものがありません。",
+    "tabLimits": "制限",
+    "limitsTitle": "アップロード制限",
+    "limitsText": "変更は次回のアップロードから適用され、再起動は不要です。再起動後も保持され、環境変数より優先されます。",
+    "limit_FILE_MAX_SIZE": "最大アップロードサイズ",
+    "limitHelp_FILE_MAX_SIZE": "1つの共有に含められる最大サイズです（全ファイルの合計）。",
+    "limit_FILE_UPLOAD_QUOTA_BYTES": "訪問者ごとのアップロード上限",
+    "limitHelp_FILE_UPLOAD_QUOTA_BYTES": "1つのアドレスが1日にアップロードできる量です。オフの場合は無制限です。",
+    "limit_FILE_MAX_FILES_PER_UPLOAD": "1回のアップロードのファイル数",
+    "limitHelp_FILE_MAX_FILES_PER_UPLOAD": "1つの共有に含められる最大ファイル数です。",
+    "quotaOff": "オフ",
+    "limitSaved": "制限を保存しました。次回のアップロードから適用されます。",
+    "limitReset": "サーバーのデフォルトに戻しました。",
+    "limitResetTo": "デフォルトに戻しました（{{value}}）",
+    "limitDefault": "デフォルト {{value}}",
+    "limitCustom": "カスタム",
+    "limitUnit": "単位",
+    "limitSave": "保存",
+    "limitRange": "{{min}} から {{max}} の間の値を選んでください。",
+    "limitInvalid": "サーバーがこの値を受け付けませんでした。"
   }
 }

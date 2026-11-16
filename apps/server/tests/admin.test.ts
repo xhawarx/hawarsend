@@ -12,17 +12,26 @@ import { getDb } from "../src/db/index.js";
 import { getConfig } from "../src/lib/config.js";
 import { createAdminRoute, ADMIN_COOKIE, resetAdminState } from "../src/routes/admin.js";
 import { createPasswordLockout } from "../src/lib/password-lockout.js";
+import { resetRuntimeSettings } from "../src/lib/runtime-settings.js";
+import { validateUploadSize } from "../src/lib/upload-validation.js";
 
 const PASSWORD = "correct horse battery staple";
 
-const CONFIG = {
+const GB = 1024 ** 3;
+
+let CONFIG: Config;
+const BASE_CONFIG = {
   ADMIN_PASSWORD: PASSWORD,
   ADMIN_SESSION_DURATION: 3600,
   BASE_URL: "http://localhost:3000",
   TRUST_PROXY: false,
   CUSTOM_TITLE: "HawarSend",
   ENABLED_SERVICES: ["file", "note", "request"],
-} as unknown as Config;
+  FILE_MAX_SIZE: 2 * GB,
+  FILE_REQUEST_MAX_SIZE: 2 * GB,
+  FILE_UPLOAD_QUOTA_BYTES: 0,
+  FILE_MAX_FILES_PER_UPLOAD: 200,
+};
 
 describe("admin route", () => {
   let dbCtx: ReturnType<typeof createTestDb>;
@@ -33,8 +42,11 @@ describe("admin route", () => {
     dbCtx = createTestDb();
     storageCtx = await createTestStorage();
     vi.mocked(getDb).mockReturnValue(dbCtx.db);
+    // A fresh copy for each test, since the limits change the cached config in place.
+    CONFIG = { ...BASE_CONFIG } as unknown as Config;
     vi.mocked(getConfig).mockReturnValue(CONFIG);
     resetAdminState();
+    resetRuntimeSettings();
     app = new Hono();
     app.route(
       "/api/admin",
@@ -200,5 +212,61 @@ describe("admin route", () => {
     );
     const res = await limited.request("/api/admin/session");
     expect(res.status).toBe(404);
+  });
+  function putLimits(cookie: string, body: unknown) {
+    return app.request("/api/admin/limits", {
+      method: "PUT",
+      headers: { Cookie: cookie, "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  }
+
+  it("refuses the limits without a session", async () => {
+    const res = await app.request("/api/admin/limits", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ FILE_MAX_SIZE: "10GB" }),
+    });
+    expect(res.status).toBe(401);
+  });
+
+  it("raises the upload limit to 1 TB at once and keeps it in the database", async () => {
+    const cookie = await sessionCookie();
+    const res = await putLimits(cookie, { FILE_MAX_SIZE: "1TB" });
+    expect(res.status).toBe(200);
+    expect(CONFIG.FILE_MAX_SIZE).toBe(1024 * GB);
+    expect(CONFIG.FILE_REQUEST_MAX_SIZE).toBe(1024 * GB);
+    // The next upload is checked against the new limit.
+    expect(validateUploadSize(500 * GB, 1, CONFIG)).toBeNull();
+    const row = dbCtx.sqlite.prepare("select value from settings where key = 'FILE_MAX_SIZE'").get() as
+      | { value: string }
+      | undefined;
+    expect(row?.value).toBe(String(1024 * GB));
+  });
+
+  it("goes back to the environment value with null", async () => {
+    const cookie = await sessionCookie();
+    await putLimits(cookie, { FILE_MAX_SIZE: "10GB" });
+    expect(CONFIG.FILE_MAX_SIZE).toBe(10 * GB);
+    const res = await putLimits(cookie, { FILE_MAX_SIZE: null });
+    expect(res.status).toBe(200);
+    expect(CONFIG.FILE_MAX_SIZE).toBe(2 * GB);
+    const body = (await res.json()) as { limits: { key: string; overridden: boolean }[] };
+    expect(body.limits.find((l) => l.key === "FILE_MAX_SIZE")?.overridden).toBe(false);
+  });
+
+  it("refuses an invalid or out of range value and changes nothing", async () => {
+    const cookie = await sessionCookie();
+    for (const body of [
+      { FILE_MAX_SIZE: "lots" },
+      { FILE_MAX_SIZE: "500TB" },
+      { FILE_MAX_SIZE: "10GB", FILE_MAX_FILES_PER_UPLOAD: 0 },
+      { UNKNOWN_SETTING: 1 },
+      ["FILE_MAX_SIZE"],
+    ]) {
+      expect((await putLimits(cookie, body)).status).toBe(400);
+    }
+    expect(CONFIG.FILE_MAX_SIZE).toBe(2 * GB);
+    expect(CONFIG.FILE_MAX_FILES_PER_UPLOAD).toBe(200);
   });
 });

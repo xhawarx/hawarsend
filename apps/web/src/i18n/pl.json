@@ -926,6 +926,25 @@
     "cleanupDone_few": "Usunięto {{count}} wygasłe elementy.",
     "cleanupDone_many": "Usunięto {{count}} wygasłych elementów.",
     "files_few": "{{count}} pliki",
-    "files_many": "{{count}} plików"
+    "files_many": "{{count}} plików",
+    "tabLimits": "Limity",
+    "limitsTitle": "Limity przesyłania",
+    "limitsText": "Zmiany obowiązują od następnego przesłania, bez restartu. Są zachowywane po restartach i mają pierwszeństwo przed zmiennymi środowiskowymi.",
+    "limit_FILE_MAX_SIZE": "Największe przesłanie",
+    "limitHelp_FILE_MAX_SIZE": "Maksymalny rozmiar jednego udziału, wszystkich plików łącznie.",
+    "limit_FILE_UPLOAD_QUOTA_BYTES": "Limit przesyłania na odwiedzającego",
+    "limitHelp_FILE_UPLOAD_QUOTA_BYTES": "Ile jeden adres może przesłać dziennie. Wyłączone oznacza brak limitu.",
+    "limit_FILE_MAX_FILES_PER_UPLOAD": "Plików na przesłanie",
+    "limitHelp_FILE_MAX_FILES_PER_UPLOAD": "Maksymalna liczba plików w jednym udziale.",
+    "quotaOff": "Wyłączone",
+    "limitSaved": "Limit zapisany. Obowiązuje od następnego przesłania.",
+    "limitReset": "Przywrócono domyślną wartość serwera.",
+    "limitResetTo": "Przywrócono wartość domyślną, {{value}}",
+    "limitDefault": "Domyślnie {{value}}",
+    "limitCustom": "Własny",
+    "limitUnit": "Jednostka",
+    "limitSave": "Zapisz",
+    "limitRange": "Wybierz wartość od {{min}} do {{max}}.",
+    "limitInvalid": "Serwer nie zaakceptował tej wartości."
   }
 }

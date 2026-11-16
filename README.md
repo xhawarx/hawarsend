@@ -98,6 +98,7 @@ panel ve API'si tamamen kapalıdır.
 - Aktif dosya paylaşımları, notlar, açık istekler ve kullanılan depolama.
 - Kimliğe göre arama, aktif ya da süresi dolmuş filtresi, onaylı silme.
 - Süresi dolanları tek tuşla temizleme, sunucu ayarlarını görüntüleme.
+- **Limitler:** En büyük yükleme boyutu (1 MB ile 100 TB arası), ziyaretçi başına kota ve yükleme başına dosya sayısı panelden değişir. Hazır seçenekler ya da MB, GB, TB ile özel değer. Yeniden başlatma gerekmez.
 
 Panel de sunucu gibi kördür: yalnızca kimlik, boyut, sayaç ve tarih görür. Dosya adlarını,
 içerikleri ve anahtarları göremez.

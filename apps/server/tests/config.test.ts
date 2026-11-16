@@ -178,7 +178,7 @@ describe("config", () => {
     });
 
     it("should reject invalid FILE_MAX_SIZE unit", async () => {
-      process.env.FILE_MAX_SIZE = "500TB";
+      process.env.FILE_MAX_SIZE = "500XB";
       await expect(loadFreshConfig()).rejects.toThrow();
     });
 

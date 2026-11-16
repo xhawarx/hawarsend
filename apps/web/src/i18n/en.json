@@ -853,6 +853,25 @@
     "filter": "Filter",
     "filterAll": "All",
     "refresh": "Refresh",
-    "noMatch": "Nothing matches the search or the filter."
+    "noMatch": "Nothing matches the search or the filter.",
+    "tabLimits": "Limits",
+    "limitsTitle": "Upload limits",
+    "limitsText": "Changes apply to the next upload, no restart needed. They are kept across restarts and win over the environment variables.",
+    "limit_FILE_MAX_SIZE": "Largest upload",
+    "limitHelp_FILE_MAX_SIZE": "The most one share may hold, all of its files together.",
+    "limit_FILE_UPLOAD_QUOTA_BYTES": "Upload quota per visitor",
+    "limitHelp_FILE_UPLOAD_QUOTA_BYTES": "How much one address may upload per day. Off means no limit.",
+    "limit_FILE_MAX_FILES_PER_UPLOAD": "Files per upload",
+    "limitHelp_FILE_MAX_FILES_PER_UPLOAD": "The most files one share may hold.",
+    "quotaOff": "Off",
+    "limitSaved": "Limit saved. It applies to the next upload.",
+    "limitReset": "Back to the default of the server.",
+    "limitResetTo": "Back to the default, {{value}}",
+    "limitDefault": "Default {{value}}",
+    "limitCustom": "Custom",
+    "limitUnit": "Unit",
+    "limitSave": "Save",
+    "limitRange": "Choose a value from {{min}} to {{max}}.",
+    "limitInvalid": "The server did not accept this value."
   }
 }

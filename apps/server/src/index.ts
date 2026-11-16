@@ -39,6 +39,7 @@ import { createAuthRoute } from "./routes/auth.js";
 import { createRequestRoute } from "./routes/request.js";
 import { createInboxRoute } from "./routes/inbox.js";
 import { createAdminRoute } from "./routes/admin.js";
+import { loadRuntimeSettings } from "./lib/runtime-settings.js";
 
 // OIDC
 import { createOidcAdapter } from "./auth/index.js";
@@ -49,6 +50,8 @@ import { describeError } from "./lib/log-error.js";
 
 const config = loadConfig();
 initDatabase(config.DATA_DIR);
+// Limits an admin changed in the panel win over the environment.
+loadRuntimeSettings();
 
 // Initialize OIDC adapter if configured
 const oidcAdapter = config.OIDC_ENABLED ? createOidcAdapter(config) : null;

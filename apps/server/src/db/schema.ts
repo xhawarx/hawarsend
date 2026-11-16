@@ -149,3 +149,15 @@ export const quotaState = sqliteTable("quota_state", {
   key: text("key").primaryKey(),
   value: text("value").notNull(),
 });
+
+/**
+ * Settings an admin changed in the panel, by the name of their environment variable. A row wins
+ * over the environment, and deleting it brings the environment value back.
+ */
+export const settings = sqliteTable("settings", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
+});

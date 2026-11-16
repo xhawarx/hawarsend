@@ -858,6 +858,25 @@
     "filter": "Filteren",
     "filterAll": "Alles",
     "refresh": "Vernieuwen",
-    "noMatch": "Niets komt overeen met de zoekopdracht of het filter."
+    "noMatch": "Niets komt overeen met de zoekopdracht of het filter.",
+    "tabLimits": "Limieten",
+    "limitsTitle": "Uploadlimieten",
+    "limitsText": "Wijzigingen gelden voor de volgende upload, zonder herstart. Ze blijven behouden na herstarts en gaan vóór de omgevingsvariabelen.",
+    "limit_FILE_MAX_SIZE": "Grootste upload",
+    "limitHelp_FILE_MAX_SIZE": "Het maximum dat één share mag bevatten, alle bestanden samen.",
+    "limit_FILE_UPLOAD_QUOTA_BYTES": "Uploadquotum per bezoeker",
+    "limitHelp_FILE_UPLOAD_QUOTA_BYTES": "Hoeveel één adres per dag mag uploaden. Uit betekent geen limiet.",
+    "limit_FILE_MAX_FILES_PER_UPLOAD": "Bestanden per upload",
+    "limitHelp_FILE_MAX_FILES_PER_UPLOAD": "Het maximale aantal bestanden in één share.",
+    "quotaOff": "Uit",
+    "limitSaved": "Limiet opgeslagen. Deze geldt voor de volgende upload.",
+    "limitReset": "Terug naar de standaardwaarde van de server.",
+    "limitResetTo": "Terug naar de standaardwaarde, {{value}}",
+    "limitDefault": "Standaard {{value}}",
+    "limitCustom": "Aangepast",
+    "limitUnit": "Eenheid",
+    "limitSave": "Opslaan",
+    "limitRange": "Kies een waarde van {{min}} tot {{max}}.",
+    "limitInvalid": "De server heeft deze waarde niet geaccepteerd."
   }
 }

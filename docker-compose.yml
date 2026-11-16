@@ -16,6 +16,4 @@ services:
       - BASE_URL=${SERVICE_URL_SKYSEND:-http://localhost:3000}
       - TRUST_PROXY=true
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:-}
-      - CUSTOM_LINK_URL=https://github.com/xhawarx/hawarsend
-      - CUSTOM_LINK_NAME=HawarSend
       # All environment variables: docs/user-guide/configuration/environment-variables.md

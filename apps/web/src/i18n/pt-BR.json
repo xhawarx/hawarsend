@@ -1251,6 +1251,25 @@
     "filter": "Filtrar",
     "filterAll": "Todos",
     "refresh": "Atualizar",
-    "noMatch": "Nada corresponde à busca ou ao filtro."
+    "noMatch": "Nada corresponde à busca ou ao filtro.",
+    "tabLimits": "Limites",
+    "limitsTitle": "Limites de upload",
+    "limitsText": "As alterações valem para o próximo upload, sem reiniciar. Elas são mantidas após reinicializações e têm prioridade sobre as variáveis de ambiente.",
+    "limit_FILE_MAX_SIZE": "Maior upload",
+    "limitHelp_FILE_MAX_SIZE": "O máximo que um compartilhamento pode conter, somando todos os arquivos.",
+    "limit_FILE_UPLOAD_QUOTA_BYTES": "Cota de upload por visitante",
+    "limitHelp_FILE_UPLOAD_QUOTA_BYTES": "Quanto um mesmo endereço pode enviar por dia. Desativada significa sem limite.",
+    "limit_FILE_MAX_FILES_PER_UPLOAD": "Arquivos por upload",
+    "limitHelp_FILE_MAX_FILES_PER_UPLOAD": "O máximo de arquivos que um compartilhamento pode conter.",
+    "quotaOff": "Desativada",
+    "limitSaved": "Limite salvo. Ele vale para o próximo upload.",
+    "limitReset": "Voltou ao padrão do servidor.",
+    "limitResetTo": "Voltou ao padrão, {{value}}",
+    "limitDefault": "Padrão {{value}}",
+    "limitCustom": "Personalizado",
+    "limitUnit": "Unidade",
+    "limitSave": "Salvar",
+    "limitRange": "Escolha um valor de {{min}} a {{max}}.",
+    "limitInvalid": "O servidor não aceitou este valor."
   }
 }
