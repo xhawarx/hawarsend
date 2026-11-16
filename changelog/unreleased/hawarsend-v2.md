@@ -13,6 +13,7 @@
 
 - **web**: The Midnight theme has navy tinted dark surfaces and a new HawarSend logo.
 - **web**: The upload page has no headline and the footer shows the tagline and a By Hawar Software byline.
+- **web**: Durations and the time left are written in the language of the page, like 1 sa. in Turkish or 1 Std. in German.
 
 ### 🔒 Security
 

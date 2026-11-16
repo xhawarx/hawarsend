@@ -2,14 +2,12 @@ import { useTranslation } from "react-i18next";
 import { HardDrive } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import type { QuotaStatus } from "@/lib/api";
-import { cn, formatBytes } from "@/lib/utils";
+import { cn, formatBytes, formatRemainingMs } from "@/lib/utils";
 
-function formatTimeRemaining(resetsAt: string): string {
+/** Hours and minutes until the quota resets, never seconds. */
+function formatResetIn(resetsAt: string): string {
   const remaining = Math.max(0, new Date(resetsAt).getTime() - Date.now());
-  const hours = Math.floor(remaining / 3_600_000);
-  const minutes = Math.floor((remaining % 3_600_000) / 60_000);
-  if (hours > 0) return `${hours}h ${minutes}m`;
-  return `${minutes}m`;
+  return formatRemainingMs(Math.max(60_000, remaining - (remaining % 60_000)));
 }
 
 interface QuotaBarProps {
@@ -50,7 +48,7 @@ export function QuotaBar({ quota }: QuotaBarProps) {
           </span>
         )}
         {quota.resetsAt && (
-          <span>{t("quota.resetsIn", { time: formatTimeRemaining(quota.resetsAt) })}</span>
+          <span>{t("quota.resetsIn", { time: formatResetIn(quota.resetsAt) })}</span>
         )}
       </div>
     </div>

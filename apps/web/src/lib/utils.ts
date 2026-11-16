@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import i18next from "i18next";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -14,30 +15,51 @@ export function formatBytes(bytes: number): string {
   return `${value.toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
 }
 
-export function formatDuration(seconds: number): string {
-  if (seconds < 60) return `${seconds}s`;
-  if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
-  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h`;
-  return `${Math.floor(seconds / 86400)}d`;
+type DurationUnit = "second" | "minute" | "hour" | "day";
+
+const LETTERS: Record<DurationUnit, string> = { second: "s", minute: "m", hour: "h", day: "d" };
+
+/**
+ * One amount of a unit in the language of the page: "1h" in English, "1 sa." in Turkish,
+ * "1 Std." in German. English keeps its compact letters. Outside the page, in a worker or a test
+ * where i18next is not set up, the English form is used as well.
+ */
+function unit(amount: number, kind: DurationUnit): string {
+  const lang = i18next.language;
+  if (!lang || lang.startsWith("en") || lang === "cimode") return `${amount}${LETTERS[kind]}`;
+  try {
+    return new Intl.NumberFormat(lang, { style: "unit", unit: kind, unitDisplay: "short" }).format(amount);
+  } catch {
+    return `${amount}${LETTERS[kind]}`;
+  }
 }
 
-export function formatTimeRemaining(expiresAt: string): string {
-  const remaining = Math.max(0, new Date(expiresAt).getTime() - Date.now());
-  const seconds = Math.floor(remaining / 1000);
-  if (seconds <= 0) return "expired";
-  if (seconds < 60) return `${seconds}s`;
-  if (seconds < 3600) {
-    const m = Math.floor(seconds / 60);
-    return `${m}m`;
-  }
+export function formatDuration(seconds: number): string {
+  if (seconds < 60) return unit(seconds, "second");
+  if (seconds < 3600) return unit(Math.floor(seconds / 60), "minute");
+  if (seconds < 86400) return unit(Math.floor(seconds / 3600), "hour");
+  return unit(Math.floor(seconds / 86400), "day");
+}
+
+/** Time left until a moment, as one or two units, "23h 59m" or "23 sa. 59 dk.". */
+export function formatRemainingMs(remaining: number): string {
+  const seconds = Math.floor(Math.max(0, remaining) / 1000);
+  if (seconds < 60) return unit(seconds, "second");
+  if (seconds < 3600) return unit(Math.floor(seconds / 60), "minute");
   if (seconds < 86400) {
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);
-    return m > 0 ? `${h}h ${m}m` : `${h}h`;
+    return m > 0 ? `${unit(h, "hour")} ${unit(m, "minute")}` : unit(h, "hour");
   }
   const d = Math.floor(seconds / 86400);
   const h = Math.floor((seconds % 86400) / 3600);
-  return h > 0 ? `${d}d ${h}h` : `${d}d`;
+  return h > 0 ? `${unit(d, "day")} ${unit(h, "hour")}` : unit(d, "day");
+}
+
+export function formatTimeRemaining(expiresAt: string): string {
+  const remaining = new Date(expiresAt).getTime() - Date.now();
+  if (remaining < 1000) return i18next.isInitialized ? i18next.t("myUploads.expired") : "expired";
+  return formatRemainingMs(remaining);
 }
 
 /**
