@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # HawarSend one-command installer.
 #
-#   curl -fsSL https://raw.githubusercontent.com/xhawarx/hawarsend/hawarsend-v2/install.sh | sudo bash
+#   curl -fsSL https://raw.githubusercontent.com/xhawarx/hawarsend/main/install.sh | sudo bash
 #
 # What it does:
 #   1. Installs Docker with the Compose plugin when it is missing.
@@ -15,9 +15,9 @@
 #   HAWARSEND_EMAIL     Email for Let's Encrypt expiry notices.
 #   HAWARSEND_DIR       Install directory. Default: /opt/hawarsend
 #   HAWARSEND_PORT      Host port without a domain. Default: 3000
-#   HAWARSEND_IMAGE     Image to run. Default: ghcr.io/xhawarx/hawarsend:edge
+#   HAWARSEND_IMAGE     Image to run. Default: ghcr.io/xhawarx/hawarsend:latest
 #   HAWARSEND_REPO      Git repository used when the image cannot be pulled.
-#   HAWARSEND_BRANCH    Branch of that repository. Default: hawarsend-v2
+#   HAWARSEND_BRANCH    Branch of that repository. Default: main
 #   HAWARSEND_NONINTERACTIVE=1   Never ask, use the values above.
 #
 # Commands:
@@ -28,9 +28,9 @@
 set -euo pipefail
 
 DIR="${HAWARSEND_DIR:-/opt/hawarsend}"
-IMAGE="${HAWARSEND_IMAGE:-ghcr.io/xhawarx/hawarsend:edge}"
+IMAGE="${HAWARSEND_IMAGE:-ghcr.io/xhawarx/hawarsend:latest}"
 REPO="${HAWARSEND_REPO:-https://github.com/xhawarx/hawarsend.git}"
-BRANCH="${HAWARSEND_BRANCH:-hawarsend-v2}"
+BRANCH="${HAWARSEND_BRANCH:-main}"
 PORT="${HAWARSEND_PORT:-3000}"
 
 if [ -t 1 ]; then
@@ -103,7 +103,7 @@ write_files() {
   umask 077
   cat > "$DIR/.env" <<EOF
 # HawarSend settings. Change a value, then run: install.sh update
-# Every variable: https://github.com/xhawarx/hawarsend/blob/hawarsend-v2/docs/user-guide/configuration/environment-variables.md
+# Every variable: https://github.com/xhawarx/hawarsend/blob/main/docs/user-guide/configuration/environment-variables.md
 HAWARSEND_IMAGE=$IMAGE
 BASE_URL=$base_url
 DOMAIN=$domain
@@ -253,7 +253,7 @@ cmd_install() {
   printf '  Admin panel:     %s/admin\n' "$base_url"
   printf '  Admin password:  %s\n' "$password"
   printf '  Settings:        %s/.env\n' "$DIR"
-  printf '  Update later:    curl -fsSL https://raw.githubusercontent.com/xhawarx/hawarsend/hawarsend-v2/install.sh | sudo bash -s update\n\n'
+  printf '  Update later:    curl -fsSL https://raw.githubusercontent.com/xhawarx/hawarsend/main/install.sh | sudo bash -s update\n\n'
   printf '  The password is stored in %s/.env (readable by root only).\n\n' "$DIR"
 }
 
