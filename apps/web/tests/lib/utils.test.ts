@@ -49,11 +49,10 @@ describe("formatBytes", () => {
     expect(formatBytes(2.5 * 1024 * 1024 * 1024)).toBe("2.5 GB");
   });
 
-  it("caps at GB for very large values (no TB unit)", () => {
-    // web version only has B/KB/MB/GB - caps at index 3
-    const result = formatBytes(1024 * 1024 * 1024 * 1024);
-    expect(result).toContain("GB");
-    expect(result).not.toContain("TB");
+  it("shows terabytes and petabytes for very large values", () => {
+    expect(formatBytes(1024 ** 4)).toBe("1.0 TB");
+    expect(formatBytes(100 * 1024 ** 4)).toBe("100.0 TB");
+    expect(formatBytes(2 * 1024 ** 5)).toBe("2.0 PB");
   });
 });
 
